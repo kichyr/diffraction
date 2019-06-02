@@ -1,20 +1,11 @@
 import tkinter
 import math
 
-def sign(x):
-    if x > 0:
-        return 1
-    if x == 0:
-        return 0
-    else:
-        return -1
-
-
 class Application(tkinter.Frame):
     pixel_size = 600
-    grid_step = 10
+    grid_step = 15
     grid_size = int(pixel_size/grid_step)
-    color_grid_size = 100
+    color_grid_size = 150
     color_grid_step = int(pixel_size/color_grid_size)
 
     def __init__(self, master):
@@ -33,28 +24,34 @@ class Application(tkinter.Frame):
         self.pixel_len = 10 # mkm - длина одного пикселя
         self.Lambda = 500*10**(-2) # длина волны микрометры
 
+
     def create_widgets(self):
         self.canvas = tkinter.Canvas(self, width=Application.pixel_size, height=Application.pixel_size)
         self.canvas.grid()
         self.canvas.bind('<B1-Motion>', self.draw)
         #self.canvas.bind('<Button-1>', self.change_flag)
         self.canvas.bind('<ButtonRelease-1>', self.change_flag)
+
     #--------------------------phys-part-------------------------
     def summing_tension(self, s_x, s_y, s_z, default_E, r_0):
         E = 0
         E1 = 0
         E2 = 0
         E3 = 0
+        E4 = 0
+        E5 = 0
         for i in range(Application.grid_size):
             for j in range(Application.grid_size):
                 if self.Matrix[i][j] != 0:
                     x_c = (j * Application.grid_step - Application.pixel_size/2) * self.pixel_len
                     y_c = (i * Application.grid_step - Application.pixel_size/2) * self.pixel_len
                     E += default_E * math.cos((x_c*s_x + y_c*s_y) * 2 * math.pi/self.Lambda)
-                    E1 += default_E * math.cos(math.pi**2/2+((x_c)*s_x + y_c*s_y) * 2 * math.pi/self.Lambda)
-                    E2 += default_E * math.cos(math.pi**2+((x_c)*s_x + y_c*s_y) * 2 * math.pi/self.Lambda)
-                    E3 += default_E * math.cos(3*math.pi**2/2+((x_c)*s_x + y_c*s_y) * 2 * math.pi/self.Lambda)
-        return max(abs(E), abs(E1), abs(E2), abs(E3))
+                    E1 += default_E * math.cos(math.pi/3+((x_c)*s_x + y_c*s_y) * 2 * math.pi/self.Lambda)
+                    E2 += default_E * math.cos(2*math.pi/3+((x_c)*s_x + y_c*s_y) * 2 * math.pi/self.Lambda)
+                    E3 += default_E * math.cos(3*math.pi/3+((x_c)*s_x + y_c*s_y) * 2 * math.pi/self.Lambda)
+                    E4 += default_E * math.cos(4*math.pi/3+((x_c)*s_x + y_c*s_y) * 2 * math.pi/self.Lambda)
+                    E5 += default_E * math.cos(5*math.pi/3+((x_c)*s_x + y_c*s_y) * 2 * math.pi/self.Lambda)
+        return max(abs(E), abs(E1), abs(E2), abs(E3), abs(E4), abs(E5))
 
 
     def calc_intensity(self):
@@ -82,11 +79,9 @@ class Application(tkinter.Frame):
                     b_s = math.sin(beta)/beta
 
                 default_E = (self.pixel_len*Application.grid_step)**2*a_s*b_s/100
-                #print(s_x, s_y, s_z)
                 self.color_matrix[Application.color_grid_size - j - 1][i] = self.summing_tension(s_x, s_y, s_z, default_E, ro)
 
         
-    #------------------------------------------------------------
     def change_flag(self, event):
         self.flag = (self.flag+1)%2
 
@@ -97,7 +92,7 @@ class Application(tkinter.Frame):
         self.calc_intensity()
         self.display_diff_picture()
 
-    
+
     def display_diff_picture(self):
         max = -999999
         min = 999999
@@ -107,8 +102,6 @@ class Application(tkinter.Frame):
                     max = self.color_matrix[i][j]
                 if min > self.color_matrix[i][j]:
                     min = self.color_matrix[i][j]
-
-        print(max, min)
 
         for i in range(Application.color_grid_size):
             for j in range(Application.color_grid_size):
@@ -120,7 +113,7 @@ class Application(tkinter.Frame):
             for j in range(Application.color_grid_size):
                 colorval = "#%02x%02x%02x" % (self.color_matrix[i][j], self.color_matrix[i][j], self.color_matrix[i][j])
                 self.canvas.create_rectangle(i*step, j*step, i*step+step, j*step+step, fill=colorval,  outline="")
-        
+
 
     def color_cells(self, x_p, y_p, x, y):
         if x - x_p != 0:
@@ -132,7 +125,6 @@ class Application(tkinter.Frame):
                 while x_start < x_end:
                     self.Matrix[int(((x_start - x)*k + y)/self.grid_step)][int(x_start/self.grid_step)] = 1
                     x_start += it_x
-                return
         
         if y - y_p != 0:
             k = (x - x_p)/(y - y_p)
@@ -142,21 +134,19 @@ class Application(tkinter.Frame):
             while y_start < y_end:
                 self.Matrix[int(y_start/self.grid_step)][int(((y_start - y)*k + x)/self.grid_step)] = 1
                 y_start += it_y
-        return
                 
         
-
     def draw(self, event):
         if self.prev_x != -1 and self.flag == 0:
-            #self.canvas.create_oval(event.x-1, event.y-1, event.x+1, event.y+1)
             self.dots.append([event.x, event.y])
             self.canvas.create_line(self.prev_x, self.prev_y, event.x, event.y, fill="#000", width=2)
             self.color_cells(self.prev_x, self.prev_y, event.x, event.y)
-            
         self.prev_x = event.x
         self.prev_y = event.y
+
         if self.flag != 0:
             self.flag = 0
+
 
     def color_int(self):
         for i in range(Application.grid_size):
@@ -218,8 +208,6 @@ class Application(tkinter.Frame):
                 j += 1
 
         
-
-
 if __name__ == "__main__":
     root = tkinter.Tk()
     root.title("diffraction meter")
