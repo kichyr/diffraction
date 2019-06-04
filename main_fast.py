@@ -1,5 +1,6 @@
 import tkinter
 import math
+import numpy as np
 
 class Application(tkinter.Frame):
     pixel_size = 600 # Размер сетки(в координатах)
@@ -17,10 +18,10 @@ class Application(tkinter.Frame):
         self.flag = 0
         self.create_widgets()
         self.dots = [] # Точки контура
-        self.matrix = [[0 for x in range(Application.grid_size)]
-                       for y in range(Application.grid_size)] # Сетка
-        self.color_matrix = [[0 for x in range(Application.color_grid_size)]
-                             for y in range(Application.color_grid_size)] # Матрица интенсивностей
+        self.matrix = np.array([[0 for x in range(Application.grid_size)]
+                       for y in range(Application.grid_size)]) # Сетка
+        self.color_matrix = np.array([[0 for x in range(Application.color_grid_size)]
+                             for y in range(Application.color_grid_size)]) # Матрица интенсивностей
         self.n_initial_phases = 6 # Количество начальных фаз при поиске амплитуды
         self.l_0 = 5*10**5 # Расстояние до линзы, микрометры
         self.pixel_len = 5 # Размер пикселя, микрометры
@@ -46,10 +47,10 @@ class Application(tkinter.Frame):
         for i in range(Application.grid_size):
             for j in range(Application.grid_size):
                 if self.matrix[i][j] != 0:
-                    x_c = (j*Application.grid_step - Application.pixel_size/2)*self.pixel_len
-                    y_c = (i*Application.grid_step - Application.pixel_size/2)*self.pixel_len
+                    delta = self.pixel_len*((j*Application.grid_step - Application.pixel_size/2)*s_x + 
+                                             (i*Application.grid_step - Application.pixel_size/2)*s_y)
                     for k in range(self.n_initial_phases):
-                        e_phased[k] += default_e * math.cos(initial_phases[k] + (x_c*s_x + y_c*s_y)
+                        e_phased[k] += default_e * np.cos(initial_phases[k] + delta
                                                             *2*math.pi/self.lambda_wave)
         for i in range(self.n_initial_phases):
             e_phased[i] = abs(e_phased[i])
@@ -73,12 +74,12 @@ class Application(tkinter.Frame):
                 if alpha == 0:
                     a_s = 1
                 else:
-                    a_s = math.sin(alpha)/alpha
+                    a_s = np.sin(alpha)/alpha
 
                 if beta == 0:
                     b_s = 1
                 else:
-                    b_s = math.sin(beta)/beta
+                    b_s = np.sin(beta)/beta
 
                 # Волна от одного квадрата в направлении (s_x, s_y, s_z)
                 default_e = ((self.pixel_len*Application.grid_step)**2)*a_s*b_s
@@ -98,8 +99,8 @@ class Application(tkinter.Frame):
 
     # Рисовалка матрицы интенсивностей
     def display_diff_picture(self):
-        max_value = -999999
-        min_value = 999999
+        max_value = -999999.0
+        min_value = 999999.0
         for i in range(Application.color_grid_size):
             for j in range(Application.color_grid_size):
                 if max_value < self.color_matrix[i][j]:
