@@ -1,6 +1,5 @@
 import tkinter
 import math
-import numpy as np
 
 class Application(tkinter.Frame):
     pixel_size = 600 # Размер сетки(в координатах)
@@ -18,11 +17,10 @@ class Application(tkinter.Frame):
         self.flag = 0
         self.create_widgets()
         self.dots = [] # Точки контура
-        self.matrix = np.array([[0 for x in range(Application.grid_size)]
-                       for y in range(Application.grid_size)]) # Сетка
-        self.color_matrix = np.array([[0 for x in range(Application.color_grid_size)]
-                             for y in range(Application.color_grid_size)]) # Матрица интенсивностей
-        self.n_initial_phases = 6 # Количество начальных фаз при поиске амплитуды
+        self.matrix = [[0 for x in range(Application.grid_size)]
+                       for y in range(Application.grid_size)] # Сетка
+        self.color_matrix = [[0 for x in range(Application.color_grid_size)]
+                             for y in range(Application.color_grid_size)] # Матрица интенсивностей
         self.l_0 = 5*10**5 # Расстояние до линзы, микрометры
         self.pixel_len = 5 # Размер пикселя, микрометры
         self.lambda_wave = 500*10**(-3) # Длина волны, микрометры
@@ -39,22 +37,19 @@ class Application(tkinter.Frame):
     # Вычисление суммы волн от всех квадратов сетки по направлению (s_x, s_y, s_z)
     # Приблизительное нахождение амплитуды волны посредством сдвига фазы и взятия максимального значения E
     def summing_tension(self, s_x, s_y, default_e):
-        initial_phases = []
-        e_phased = []
-        for i in range(self.n_initial_phases):
-            e_phased.append(0)
-            initial_phases.append(i*2*math.pi/self.n_initial_phases)
+        e = 0
+        e1 = 0
+        e2 = 0
+        e3 = 0
         for i in range(Application.grid_size):
             for j in range(Application.grid_size):
                 if self.matrix[i][j] != 0:
-                    delta = self.pixel_len*((j*Application.grid_step - Application.pixel_size/2)*s_x + 
-                                             (i*Application.grid_step - Application.pixel_size/2)*s_y)
-                    for k in range(self.n_initial_phases):
-                        e_phased[k] += default_e * np.cos(initial_phases[k] + delta
-                                                            *2*math.pi/self.lambda_wave)
-        for i in range(self.n_initial_phases):
-            e_phased[i] = abs(e_phased[i])
-        return max(e_phased)
+                    delta = self.pixel_len*((j * Application.grid_step - Application.pixel_size/2)*s_x + (i * Application.grid_step - Application.pixel_size/2)*s_y)
+                    e += default_e * math.cos(delta * 2 * math.pi/self.lambda_wave)
+                    e1 += default_e * math.cos(math.pi/2 + delta * 2 * math.pi/self.lambda_wave)
+                    e2 += default_e * math.cos(math.pi + delta * 2 * math.pi/self.lambda_wave)
+                    e3 += default_e * math.cos(3*math.pi/2 + delta * 2 * math.pi/self.lambda_wave)
+        return max(abs(e), abs(e1), abs(e2), abs(e3))
 
 
     # Вычисление всей матрицы интенсивностей    
@@ -74,15 +69,15 @@ class Application(tkinter.Frame):
                 if alpha == 0:
                     a_s = 1
                 else:
-                    a_s = np.sin(alpha)/alpha
+                    a_s = math.sin(alpha)/alpha
 
                 if beta == 0:
                     b_s = 1
                 else:
-                    b_s = np.sin(beta)/beta
+                    b_s = math.sin(beta)/beta
 
                 # Волна от одного квадрата в направлении (s_x, s_y, s_z)
-                default_e = ((self.pixel_len*Application.grid_step)**2)*a_s*b_s
+                default_e = (self.pixel_len*Application.grid_step)**2*a_s*b_s/100
 
                 self.color_matrix[Application.color_grid_size - j - 1][i] = self.summing_tension(s_x, s_y, default_e)
 
@@ -99,8 +94,8 @@ class Application(tkinter.Frame):
 
     # Рисовалка матрицы интенсивностей
     def display_diff_picture(self):
-        max_value = -999999.0
-        min_value = 999999.0
+        max_value = -999999
+        min_value = 999999
         for i in range(Application.color_grid_size):
             for j in range(Application.color_grid_size):
                 if max_value < self.color_matrix[i][j]:
@@ -111,7 +106,8 @@ class Application(tkinter.Frame):
         for i in range(Application.color_grid_size):
             for j in range(Application.color_grid_size):
                 self.color_matrix[i][j] = int((self.color_matrix[i][j]/(max_value - min_value)) * 255)
-
+                
+        print(max_value, min_value)
 
         step = Application.pixel_size/Application.color_grid_size
         for i in range(Application.color_grid_size):
