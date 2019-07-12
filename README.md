@@ -18,5 +18,8 @@
  Для квадрата с центром в <img src="http://latex.codecogs.com/gif.latex?(x_0, y_0)" border="0"/>
  поле в направлении <img src="http://latex.codecogs.com/gif.latex?(s_x, s_y, s_z)" border="0"/> вычисляется следующим образом:
 
-<img src="http://latex.codecogs.com/gif.latex?\vec{r}_0 = E = \int\limits_{x_0 - d/2}^{x_0 + d/2} \int\limits_{x_0 - d/2}^{x_0 + d/2} \cos(k(s_xx + s_yy))dxdy = d^2\frac{\sin\alpha}{\alpha}\frac{\sin\beta}{\beta}" border="0"/>, <img src="http://latex.codecogs.com/gif.latex?\alpha = \frac{\pi \cdot d \cdot s_x}{\lambda}" border="0"/>, 
+<img src="http://latex.codecogs.com/gif.latex?E = \int\limits_{x_0 - d/2}^{x_0 + d/2} \int\limits_{x_0 - d/2}^{x_0 + d/2} \cos(k(s_xx + s_yy))dxdy = d^2\frac{\sin\alpha}{\alpha}\frac{\sin\beta}{\beta}" border="0"/>
+
+<img src="http://latex.codecogs.com/gif.latex?\alpha = \frac{\pi \cdot d \cdot s_x}{\lambda}" border="0"/>
+
 <img src="http://latex.codecogs.com/gif.latex?\beta = \frac{\pi \cdot b \cdot s_y}{\lambda}" border="0"/>
