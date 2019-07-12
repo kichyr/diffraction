@@ -15,6 +15,7 @@
 
 <img src="http://latex.codecogs.com/gif.latex?\vec{r}_0 = \frac{\sum\limits_{k = 1}^{n}\vec{r}_k}{n}" border="0"/>
 
- Для квадрата с центром в(x0,y0)поле в направлении(sx,sy,sz)вычисляется следующим образом:
+ Для квадрата с центром в <img src="http://latex.codecogs.com/gif.latex?(x_0, y_0)" border="0"/>
+ поле в направлении(sx,sy,sz)вычисляется следующим образом:
 
 <img src="http://latex.codecogs.com/gif.latex?\vec{r}_0 = E = \int\limits_{x_0 - d/2}^{x_0 + d/2} \int\limits_{x_0 - d/2}^{x_0 + d/2} \cos(k(s_xx + s_yy))dxdy = d^2\frac{\sin\alpha}{\alpha}\frac{\sin\beta}{\beta}" border="0"/>
