@@ -20,6 +20,12 @@
 
 <img src="http://latex.codecogs.com/gif.latex?E = \int\limits_{x_0 - d/2}^{x_0 + d/2} \int\limits_{x_0 - d/2}^{x_0 + d/2} \cos(k(s_xx + s_yy))dxdy = d^2\frac{\sin\alpha}{\alpha}\frac{\sin\beta}{\beta}" border="0"/>
 
-<img src="http://latex.codecogs.com/gif.latex?\alpha = \frac{\pi \cdot d \cdot s_x}{\lambda}" border="0"/>
+**3.** Матрица интенсивностей выводится на экран, яркость каждого пикселя пропорциональна значению соответствующего элемента матрицы.
 
-<img src="http://latex.codecogs.com/gif.latex?\beta = \frac{\pi \cdot b \cdot s_y}{\lambda}" border="0"/>
+**Руководство пользователя**
+
++Для начала работы необходимо изобразить в окне границы исследуемого отверстия(замкнутые кривые без самопересечений) с помощью мыши и зажатой ЛКМ.
+
++Для вывода на экран дифракционной картины от заданного отверстия нажмите кнопку "Calc!".
+
++Для очистки экрана нажмите кнопку "Clean"
