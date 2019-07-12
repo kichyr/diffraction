@@ -20,5 +20,4 @@
 
 <img src="http://latex.codecogs.com/gif.latex?\vec{r}_0 = E = \int\limits_{x_0 - d/2}^{x_0 + d/2} \int\limits_{x_0 - d/2}^{x_0 + d/2} \cos(k(s_xx + s_yy))dxdy = d^2\frac{\sin\alpha}{\alpha}\frac{\sin\beta}{\beta}" border="0"/>
 где 
-<img src="http://latex.codecogs.com/gif.latex?\alpha = \frac{\pi d s_x}{\lambda}, \beta = \frac{\pi b s_y}{\lambda}, d" border="0"/> --- сторона квадрата.
-
+<img src="http://latex.codecogs.com/gif.latex?\alpha = \frac{\pi d s_x}{\lambda}" border="0"/>,
