@@ -13,7 +13,7 @@
 Матрица интенсивностей вычисляется следующим образом: 
 Фиксируется некоторое направление, и с учетом разностей фаз суммируются поля от всех пикселей в этом направлении. При этом за пиксель с нулевой начальной фазой берется пиксель, содержащий центр заданного отверстия, который вычисляется по формуле:
 
-<img src="http://latex.codecogs.com/gif.latex?\vec{r}_0 = \frac{\sum\limits_{k = 1}^{n}\vec{r}_k}{n}" border="0"/>
+<img src="http://latex.codecogs.com/gif.latex?\vec{r}_c = \frac{\sum\limits_{k = 1}^{n}\vec{r}_k}{n}" border="0"/>
 
  Для квадрата с центром в <img src="http://latex.codecogs.com/gif.latex?(x_0, y_0)" border="0"/>
  поле в направлении <img src="http://latex.codecogs.com/gif.latex?(s_x, s_y, s_z)" border="0"/> вычисляется следующим образом:
